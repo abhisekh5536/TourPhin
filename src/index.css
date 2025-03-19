@@ -1,0 +1,533 @@
+/* google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100&family=Poiret+One&family=Quicksand:wght@300&display=swap');
+
+/* Navigation Bar Styles */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background-color: rgba(25, 25, 30, 0.9); /* Dark background with opacity */
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(175, 163, 117, 0.2); /* Subtle gold border */
+}
+
+.logo h2 {
+    color: #ffd29c;
+    font-family: 'Poiret One', cursive;
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #ffd29c;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger {
+    display: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Responsive Navigation */
+@media screen and (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        flex-direction: column;
+        background-color: rgba(175, 163, 117, 0.95);
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        padding: 20px 0;
+        gap: 15px;
+    }
+    
+    .nav-links.active {
+        left: 0;
+    }
+    
+    .hamburger {
+        display: block;
+    }
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#wrapper {
+    perspective: 10px;
+    overflow-x: hidden ;
+    width: 100vw;
+    height: 100vh;
+    background-color: #121212; /* Dark background for the entire wrapper */
+}
+.container {
+    position: relative;
+    transform-style: preserve-3d;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 0;
+}
+.background, .foreground {
+    position: absolute;
+    height: 100%;
+    object-fit: cover;
+}
+.background {
+    transform: translateZ(-18px) scale(3.1);
+    width: 100vw;
+    z-index: -1;
+    object-fit: cover;
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+.foreground {
+    transform: translate3d(406px, 300px, -10px) scale(2.5);
+    z-index: 1;
+}
+.container h1 {
+    font-size: 6em;
+    font-family: serif;
+    color: #ffd29c;
+}
+
+.exolore_swipe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h3#swipe_down {
+    bottom: 0;
+    position: absolute;
+    padding: 0 0 20px 0;
+    color: white;
+    font-weight: 100;
+}
+
+section {
+    padding: 100px;
+    background-color: #121212; /* Dark background */
+    transform: translateZ(0px);
+    color: #e0e0e0; /* Light gray text for better readability on dark background */
+}
+
+/* destination container css */
+.destinations {
+    position: relative;
+}
+
+.destinations::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255, 210, 156, 0.05), rgba(175, 163, 117, 0.05)); /* Subtle gradient using existing colors */
+    z-index: -1;
+}
+
+.container {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.popular_destinations {
+    position: relative;
+    width: 300px;
+    height: 450px; /* Slightly reduced height */
+    overflow: hidden;
+    background-color: #1e1e24; /* Dark card background */
+    border-radius: 15px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Darker shadow for depth */
+    border: 1px solid rgba(175, 163, 117, 0.1); /* Very subtle border */
+}
+
+.popular_destinations img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.5s ease;
+}
+
+.popular_destinations h3 {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 15px 0 10px;
+    font-family: 'Josefin Sans', sans-serif;
+    color: #ffd29c; /* Using the gold accent color */
+    letter-spacing: 1px;
+}
+
+.popular_destinations p {
+    margin: 0 0 10px 0;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 50px; /* Space for the button */
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #b0b0b0; /* Light gray for text on dark background */
+    font-family: 'Quicksand', sans-serif;
+}
+
+.popular_destinations:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(175, 163, 117, 0.3); /* More visible border on hover */
+}
+
+.popular_destinations:hover img {
+    transform: scale(1.05);
+}
+
+.view_button a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto;
+    background-color: #afa375;
+    border-radius: 8px;
+    height: 38px;
+    width: 70%;
+    color: #121212; /* Dark text on gold button for contrast */
+    transition: all 0.3s ease;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+}
+
+.view_button {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+.view_button a:hover{
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(175, 163, 117, 0.4); /* Gold glow effect */
+    background-color: #ffd29c;
+}
+
+/* Update scrollbar for dark theme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #afa375;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ffd29c;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1200px) {
+    .container {
+        gap: 20px;
+        padding: 15px;
+    }
+    .popular_destinations {
+        width: 280px;
+        height: 430px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    section {
+        padding: 80px 40px;
+    }
+    
+    .container {
+        gap: 15px;
+    }
+    
+    .popular_destinations {
+        width: 45%;
+        max-width: 400px;
+        height: 420px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    section {
+        padding: 60px 20px;
+    }
+    
+    .container {
+        gap: 15px;
+    }
+    
+    .popular_destinations {
+        width: 100%;
+        max-width: 450px;
+        height: auto;
+        min-height: 400px;
+        margin-bottom: 15px;
+    }
+    .foreground {
+        transform: translate3d(406px, 300px, -10px) scale(1.7);
+        z-index: 1;
+    }
+
+    
+    .popular_destinations img {
+        height: 170px;
+    }
+    
+    .popular_destinations h3 {
+        margin: 12px 0 8px;
+        font-size: 1.1rem;
+    }
+    
+    .popular_destinations p {
+        font-size: 0.9rem;
+        padding-bottom: 45px;
+    }
+    
+    .view_button {
+        bottom: 12px;
+    }
+    
+    .view_button a {
+        height: 36px;
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    section {
+        padding: 40px 15px;
+    }
+    
+    .popular_destinations {
+        min-height: 380px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+    
+    .popular_destinations img {
+        height: 150px;
+        border-radius: 8px;
+    }
+    
+    .popular_destinations h3 {
+        font-size: 1rem;
+        margin: 10px 0 6px;
+    }
+    
+    .popular_destinations p {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        padding-bottom: 40px;
+    }
+    
+    .view_button {
+        bottom: 10px;
+    }
+    
+    .view_button a {
+        height: 34px;
+        width: 85%;
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 360px) {
+    .popular_destinations {
+        min-height: 360px;
+        padding: 10px;
+    }
+    
+    .popular_destinations img {
+        height: 130px;
+    }
+    
+    .popular_destinations p {
+        padding-bottom: 35px;
+    }
+    
+    .view_button a {
+        height: 32px;
+        width: 90%;
+    }
+}
+
+/* Section Header Styling */
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: #ffd29c;
+    font-family: 'Poiret One', cursive;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+}
+
+.header-line {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(to right, rgba(175, 163, 117, 0.3), #afa375, rgba(175, 163, 117, 0.3));
+    margin: 0 auto;
+    border-radius: 2px;
+}
+
+/* View More Button Styling */
+.view-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.view-more-btn {
+    background-color: transparent;
+    color: #ffd29c;
+    border: 2px solid #afa375;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.view-more-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: #afa375;
+    transition: all 0.4s ease;
+    z-index: -1;
+    border-radius: 28px;
+}
+
+.view-more-btn:hover {
+    color: #121212;
+}
+
+.view-more-btn:hover::before {
+    width: 100%;
+}
+
+.view-more-btn i {
+    transition: transform 0.3s ease;
+}
+
+.view-more-btn:hover i {
+    transform: translateX(5px);
+}
+
+/* Responsive adjustments for section header and view more button */
+@media screen and (max-width: 768px) {
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .header-line {
+        width: 60px;
+    }
+    
+    .view-more-container {
+        margin-top: 30px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .section-header {
+        margin-bottom: 30px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.7rem;
+        letter-spacing: 1px;
+    }
+    
+    .header-line {
+        width: 50px;
+        height: 2px;
+    }
+    
+    .view-more-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}
