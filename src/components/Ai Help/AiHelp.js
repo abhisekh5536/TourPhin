@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import OpenAI from "openai";
 import './AiHelp.css';
-import { destinations } from './Destinations';  // Add this import
+import { destinations } from '../Destinations/Destinations';  // Add this import
 
 const AiHelp = () => {
   const [prompt, setPrompt] = useState('');

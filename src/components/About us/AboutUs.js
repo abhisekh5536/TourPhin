@@ -32,6 +32,8 @@ const AboutUs = () => {
               
               <h3>Our Mission</h3>
               <p>At TourPhin, our mission is to provide exceptional travel experiences that showcase the authentic beauty, culture, and heritage of India. We strive to create journeys that are not just trips, but transformative experiences that leave lasting impressions.</p>
+              
+              <p>We believe that the best travel experiences come from local expertise. That's why we've created a platform where passionate individuals from all walks of life can join as tourist guides and share their unique knowledge and perspectives. Whether you're a history enthusiast, a cultural expert, or simply someone who loves showing others the hidden gems of your hometown, TourPhin welcomes you to become part of our community of guides.</p>
             </div>
           </div>
         </div>
@@ -40,7 +42,7 @@ const AboutUs = () => {
       {/* Why Choose Us Section */}
       <section className="about-section why-choose-us">
         <div className="about-container">
-          <div className="section-header">
+          <div className="section-header" id='Why_Choose_Tourphn'>
             <h2>Why Choose TourPhin</h2>
             <div className="header-line"></div>
           </div>
@@ -145,6 +147,18 @@ const AboutUs = () => {
               </div>
             </div>
             
+            <div className="team-member">
+              <div className="member-image">
+                <img src="https://avatar.iran.liara.run/public/7" alt="Team Member" />
+              </div>
+              <h3>Saurabh Roy</h3>
+              <p className="member-role">...............</p>
+              <p className="member-bio">Saurabh passion for exploration helps him create unique and immersive travel experiences.</p>
+              <div className="member-social">
+                <a href="https://www.linkedin.com/in/saurabh-roy-840598273/" target="_blank"><i className="fab fa-linkedin-in"></i></a>
+                <a href="#" target="_blank"><i className="fab fa-twitter"></i></a>
+              </div>
+            </div>
 
           </div>
         </div>

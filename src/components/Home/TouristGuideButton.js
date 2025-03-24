@@ -1,5 +1,5 @@
 import React from 'react';
-import '../index.css';
+import './TouristGuideButton.css';
 
 const TouristGuideButton = ({ onClick }) => {
   return (
