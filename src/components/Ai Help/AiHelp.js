@@ -57,6 +57,11 @@ const AiHelp = () => {
           }
         ],
         "summary": "A brief summary of the recommendations"
+        1) listen carefully give humoras summary inrespect to the user's prompt and in humouras way make fun of user based on his prompt(roast the user burtally) make it concise.
+        2) (**important**)always abuse the user in humuras way for example abe chutiye tujhe ghumna h aur sirf itne hi paise h tere pass jake dihaadi laga, use abusive words in a humuras way abe gandu,lodu,chutiya,lund ke, jhantu and madarchod etc.
+        3) after roasting part ends summarize the destination response provided by you try to make it short
+        4) Always make the summary in the desired language as the user prompt.
+        5) Don't roast and abuse the user if he is asking about sprituial or religious topics always praise it. 
       }
       
       Return multiple destination cards that match the criteria, not just one.

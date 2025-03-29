@@ -2,7 +2,7 @@
   background-color: #121212;
   color: #e0e0e0;
   min-height: 100vh;
-  padding: 80px 50px 40px;
+  padding: 120px 50px 40px;
   font-family: 'Quicksand', sans-serif;
 }
 
@@ -332,26 +332,252 @@
 }
 
 /* Responsive styles */
+@media (max-width: 1024px) {
+  .ai-help-container {
+    padding: 70px 30px 35px;
+  }
+  
+  .ai-help-content {
+    gap: 25px;
+  }
+  
+  .response-container {
+    padding: 20px;
+  }
+  
+  .response-container h2 {
+    font-size: 1.6rem;
+  }
+  
+  .card-image {
+    height: 180px;
+  }
+}
+
 @media (max-width: 768px) {
   .ai-help-container {
     padding: 60px 20px 30px;
   }
   
+  .ai-help-header {
+    margin: 15px 0px 25px 0px;
+  }
+  
   .ai-help-header h1 {
+    padding-top: 50px;
     font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .ai-help-header p {
+    font-size: 1rem;
   }
   
   .destinations-cards {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .prompt-input {
+    padding: 12px;
+  }
+  
+  .response-summary {
+    font-size: 1rem;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .ai-help-tips {
+    padding: 15px 20px;
+  }
+  
+  .ai-help-tips h3 {
+    font-size: 1.2rem;
+  }
+  
+  .card-content {
+    padding: 15px;
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+  }
+  
+  .card-description {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
   }
 }
 
 @media (max-width: 480px) {
+  .ai-help-container {
+    padding: 60px 15px 25px; /* Increased top padding to avoid navbar overlap */
+  }
+  
   .ai-help-header h1 {
     font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  
+  .header-line {
+    width: 80px;
+    margin: 0 auto 15px;
+  }
+  
+  .ai-help-content {
+    gap: 20px;
+  }
+  
+  .prompt-input-container {
+    margin-bottom: 15px;
+  }
+  
+  .prompt-input {
+    min-height: 100px; /* Set minimum height for better usability */
+    font-size: 16px; /* Prevent zoom on iOS devices */
   }
   
   .submit-btn {
     width: 100%;
+    padding: 12px 20px; /* Increased padding for better touch target */
+    font-size: 0.95rem;
+    margin-top: 5px;
+  }
+  
+  .response-container {
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 10px;
+  }
+  
+  .response-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .card-highlights {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .highlight {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+  
+  .card-button {
+    padding: 12px 0; /* Increased padding for better touch target */
+    font-size: 0.95rem;
+    min-height: 44px; /* Minimum height for touch targets */
+  }
+  
+  .destination-highlights h4,
+  .destination-recommendation h4 {
+    font-size: 1rem;
+  }
+  
+  .destination-highlights li,
+  .destination-recommendation p {
+    font-size: 0.9rem;
+  }
+  
+  .no-results {
+    padding: 20px;
+  }
+  
+  .no-results p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .ai-help-container {
+    padding: 55px 12px 20px;
+  }
+  
+  .ai-help-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .ai-help-header p {
+    font-size: 0.9rem;
+    padding: 0 5px;
+  }
+  
+  .card-image {
+    height: 150px;
+  }
+  
+  .card-content {
+    padding: 12px;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  
+  .card-description {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+  
+  .ai-help-tips {
+    padding: 12px 15px;
+  }
+  
+  .ai-help-tips h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  
+  .ai-help-tips li {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+  
+  .destination-highlights li {
+    margin-bottom: 6px;
+  }
+  
+  .submit-btn {
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape mode for mobile devices */
+@media (max-width: 896px) and (orientation: landscape) {
+  .ai-help-container {
+    padding: 20px 20px 20px;
+  }
+  
+  .ai-help-header {
+    margin: 10px 0px 15px 0px;
+  }
+  
+  .ai-help-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+  }
+  
+  .header-line {
+    margin: 0 auto 10px;
+  }
+  
+  .destinations-cards {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .card-image {
+    height: 140px;
+  }
+  
+  .prompt-input {
+    min-height: 80px;
+  }
+  
+  .ai-help-content {
+    gap: 15px;
   }
 }
