@@ -1,0 +1,347 @@
+.profile-container {
+  min-height: 100vh;
+  padding: 80px 20px 40px;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.profile-header h1 {
+  color: #ffd29c;
+  font-family: 'Poiret One', cursive;
+  font-weight: bold;
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.header-line {
+  height: 2px;
+  width: 80px;
+  background: linear-gradient(to right, rgba(175, 163, 117, 0.3), #afa375, rgba(175, 163, 117, 0.3));
+  margin: 0 auto;
+}
+
+.profile-card {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: rgba(30, 30, 36, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(175, 163, 117, 0.2);
+  padding: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.profile-avatar {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-avatar i {
+  font-size: 80px;
+  color: #afa375;
+}
+
+.profile-email {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(175, 163, 117, 0.2);
+}
+
+.profile-email h3 {
+  color: #ffd29c;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.profile-email p {
+  color: #a0a0a0;
+  font-size: 14px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #ffd29c;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  background-color: rgba(42, 42, 48, 0.7);
+  border: 1px solid rgba(175, 163, 117, 0.3);
+  border-radius: 8px;
+  padding: 12px 15px;
+  color: #e0e0e0;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  outline: none;
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background-color: rgba(42, 42, 48, 0.4);
+  color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #afa375;
+  box-shadow: 0 0 10px rgba(175, 163, 117, 0.2);
+}
+
+.profile-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn,
+.signout-btn {
+  background-color: transparent;
+  color: #ffd29c;
+  border: 2px solid #afa375;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.edit-btn::before,
+.save-btn::before,
+.cancel-btn::before,
+.signout-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #afa375;
+  transition: all 0.4s ease;
+  z-index: -1;
+  border-radius: 28px;
+}
+
+.edit-btn:hover,
+.save-btn:hover,
+.signout-btn:hover {
+  color: #121212;
+}
+
+.edit-btn:hover::before,
+.save-btn:hover::before,
+.signout-btn:hover::before {
+  width: 100%;
+}
+
+.cancel-btn {
+  border-color: rgba(224, 224, 224, 0.3);
+  color: #e0e0e0;
+}
+
+.cancel-btn::before {
+  background-color: rgba(224, 224, 224, 0.1);
+}
+
+.cancel-btn:hover {
+  color: #e0e0e0;
+}
+
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(175, 163, 117, 0.2);
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffd29c;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  padding: 8px 0;
+}
+
+.profile-link:hover {
+  color: #afa375;
+  transform: translateX(5px);
+}
+
+.signout-btn {
+  margin-left: auto;
+  background-color: transparent;
+  border-color: rgba(255, 87, 87, 0.5);
+  color: #ff5757;
+}
+
+.signout-btn::before {
+  background-color: rgba(255, 87, 87, 0.1);
+}
+
+.signout-btn:hover {
+  color: #ff5757;
+}
+
+.success-message,
+.error-message {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.95rem;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.success-message {
+  background-color: rgba(75, 181, 67, 0.2);
+  border: 1px solid rgba(75, 181, 67, 0.5);
+  color: #4bb543;
+}
+
+.error-message {
+  background-color: rgba(255, 87, 87, 0.2);
+  border: 1px solid rgba(255, 87, 87, 0.5);
+  color: #ff5757;
+}
+
+.loading-spinner,
+.not-logged-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+.loading-spinner i {
+  font-size: 40px;
+  color: #afa375;
+  margin-bottom: 15px;
+}
+
+.not-logged-in h2 {
+  color: #ffd29c;
+  margin-bottom: 10px;
+}
+
+.not-logged-in p {
+  margin-bottom: 20px;
+}
+
+.login-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  color: #ffd29c;
+  border: 2px solid #afa375;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.login-link-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #afa375;
+  transition: all 0.4s ease;
+  z-index: -1;
+  border-radius: 28px;
+}
+
+.login-link-btn:hover {
+  color: #121212;
+}
+
+.login-link-btn:hover::before {
+  width: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile-container {
+    padding: 60px 15px 30px;
+  }
+  
+  .profile-card {
+    padding: 20px;
+  }
+  
+  .profile-links {
+    flex-direction: column;
+  }
+  
+  .signout-btn {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

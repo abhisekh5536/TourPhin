@@ -13,8 +13,6 @@
 
 /* Section and destinations styles moved to Home.css */
 
-
-
 /* Update scrollbar for dark theme */
 ::-webkit-scrollbar {
     width: 8px;
@@ -31,4 +29,18 @@
 
 ::-webkit-scrollbar-thumb:hover {
     background: #ffd29c;
+}
+
+/* Hide scrollbar on mobile devices */
+@media screen and (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+    
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    ::-webkit-scrollbar {
+        display: none;
+    }
 }

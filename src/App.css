@@ -1,3 +1,48 @@
 .App {
   text-align: center;
 }
+
+/* Bottom navigation for mobile only */
+.test {
+  display: none; /* Hidden by default */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(25, 25, 30, 0.95);
+  z-index: 9999;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid rgba(175, 163, 117, 0.2);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.test a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-size: 12px;
+  padding: 5px 0;
+}
+
+.test a i {
+  font-size: 24px;
+  color: #ffd29c;
+}
+
+.test a span {
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+/* Show bottom navigation only on mobile devices */
+@media screen and (max-width: 768px) {
+  .test {
+    display: flex;
+  }
+}
+

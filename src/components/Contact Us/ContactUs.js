@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './ContactUs.css';
+import {Link} from 'react-router-dom';
 
-const ContactUs = () => {
+// Update the component to accept the handleTouristGuideClick prop
+const ContactUs = ({ handleTouristGuideClick }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -216,8 +218,9 @@ const ContactUs = () => {
           <h2>Ready to Start Your Journey?</h2>
           <p>Let us help you create memories that will last a lifetime</p>
           <div className="cta-buttons">
-            <a href="#" className="cta-button primary">View Our Packages</a>
-            <a href="#" className="cta-button secondary">Become a Guide</a>
+            <Link to="/packages" className="cta-button primary">View Our Packages</Link>
+            {/* Now this will work because handleTouristGuideClick is passed as a prop */}
+            <button onClick={handleTouristGuideClick} className="cta-button secondary">Become a Guide</button>
           </div>
         </div>
       </section>
