@@ -148,7 +148,7 @@ const TouristGuideForm = ({ onClose }) => {
             ></textarea>
           </div>
           
-          <div className="form-group checkbox-group">
+          <div className="the_checkbox">
             <input
               type="checkbox"
               id="agreeToTerms"

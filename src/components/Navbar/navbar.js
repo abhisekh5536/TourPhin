@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './navbar.css';
-import TouristGuideButton from '../Home/TouristGuideButton';
+// Remove TouristGuideButton import since we're not using it anymore
 
 function Navbar({handleTouristGuideClick}) {
   // State to track if mobile menu is open
@@ -24,12 +24,16 @@ function Navbar({handleTouristGuideClick}) {
           <li><Link to="/destinations">Destinations</Link></li>
           <li><Link to="/aihelp">AI Help</Link></li>
           <li><Link to="/packages">Tour Packages</Link></li>
+          {/* Remove Guides from here since we'll add it to the nav-right */}
           <li><Link to="/about-us">About Us</Link></li>
           <li><Link to="/contact-us">Contact</Link></li>
         </ul>
         
         <div className="nav-right">
-          <TouristGuideButton onClick={handleTouristGuideClick} />
+          {/* Replace TouristGuideButton with a styled Guides link */}
+          <Link to="/guides" className="guides-nav-btn">
+            <i className="fas fa-user-friends"></i> Guides
+          </Link>
           <div className="profile-icon">
             <Link to="/profile">
               <i className="fas fa-user-circle"></i>

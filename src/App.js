@@ -17,6 +17,8 @@ import Navbar from './components/Navbar/navbar';
 import SignUp from './components/LoginP or Reg/signUp';
 import './App.css';
 import UserProfile from './components/Profile/UserProfile';
+import Guides from './components/Guides/Guides';
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   
@@ -24,12 +26,23 @@ function ScrollToTop() {
     window.scrollTo(0, 0);
   }, [pathname]);
 }
+
+// Create a conditional footer component
+function ConditionalFooter() {
+  const { pathname } = useLocation();
+  
+  // Don't render footer on home page
+  if (pathname === '/') {
+    return null;
+  }
+  
+  // Render footer on all other pages
+  return <Footer />;
+}
+
 function App() {
   const [showTouristGuideForm, setShowTouristGuideForm] = React.useState(false);
   
-  // Remove the unused ref
-  // const destinationsRef = React.useRef(null);
-
   const handleTouristGuideClick = () => {
     setShowTouristGuideForm(true);
   };
@@ -55,37 +68,16 @@ function App() {
         <Route path="/contact-us" element={<ContactUs handleTouristGuideClick={handleTouristGuideClick} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path='/signUp' element={<SignUp/>}/>
-        {/* Add the new profile route */}
         <Route path='/profile' element={<UserProfile />} />
+        {/* Update the guides route to pass the handleTouristGuideClick prop */}
+        <Route path='/guides' element={<Guides handleTouristGuideClick={handleTouristGuideClick} />} />
       </Routes>
 
-      {/* Tourist Guide Form Modal */}
+      {/* Show the tourist guide form when button is clicked */}
       {showTouristGuideForm && <TouristGuideForm onClose={handleCloseForm} />}
-
-      <Footer />
       
-      <div className='test'>
-        <Link to="/">
-          <i className="fas fa-home"></i>
-          <span>Home</span>
-        </Link>
-        <Link to="/destinations">
-          <i className="fas fa-map-marker-alt"></i>
-          <span>Destinations</span>
-        </Link>
-        <Link to="/aihelp">
-          <i className="fas fa-robot"></i>
-          <span>AI Help</span>
-        </Link>
-        <Link to="/packages">
-          <i className="fas fa-suitcase"></i>
-          <span>Packages</span>
-        </Link>
-        <Link to="/profile">
-          <i className="fas fa-user-circle"></i>
-          <span>Profile</span>
-        </Link>
-      </div>
+      {/* Replace static Footer with conditional one */}
+      <ConditionalFooter />
     </Router>
   );
 }
