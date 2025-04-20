@@ -11,7 +11,7 @@ import PackageDetails from './components/Packages/PackageDetails';
 import Footer from './components/Footer/Footer';
 import AboutUs from './components/About us/AboutUs';
 import ContactUs from './components/Contact Us/ContactUs';
-import LoginPage from './components/LoginP or Reg/loginPage';
+import LoginPage from './components/LoginP or Reg/loginP';
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/navbar';
 import SignUp from './components/LoginP or Reg/signUp';
