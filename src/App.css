@@ -42,7 +42,7 @@
 /* Show bottom navigation only on mobile devices */
 @media screen and (max-width: 768px) {
   .test {
-    display: flex;
+    display: flex !important; /* Added !important to override any conflicting styles */
   }
 }
 

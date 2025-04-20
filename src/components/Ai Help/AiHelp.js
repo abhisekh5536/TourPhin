@@ -45,6 +45,7 @@ const AiHelp = () => {
       and interests: ${prompt.match(/interests?.*?(cultural|adventure|nature)/i)?.[1] || 'general'}.
       
       IMPORTANT: If a budget is specified, ONLY recommend destinations that fit within that budget and below the budget.
+      The cheapest destination starts at ₹5000.
       
       Format your response as a JSON object with the following structure:
       {
