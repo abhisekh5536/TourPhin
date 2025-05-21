@@ -8,12 +8,13 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({
     fullName: '',
-    phone: '',
+    phone: '', 
     address: '',
     preferences: ''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
+  const [imageUrl, setImageUrl] = useState(''); // State for profile image URL
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -22,11 +23,10 @@ const UserProfile = () => {
         setUser(user);
         
         if (user) {
-          // Fetch user profile data from a profiles table if you have one
           const { data, error } = await supabase
             .from('profiles')
             .select('*')
-            .eq('user_id', user.id)
+            .eq('id', user.id)  // Changed from user_id to id based on the schema
             .single();
             
           if (data && !error) {
@@ -34,8 +34,11 @@ const UserProfile = () => {
               fullName: data.full_name || '',
               phone: data.phone || '',
               address: data.address || '',
-              preferences: data.preferences || ''
+              preferences: data.preferences || ''  // Changed from preferences to prefrences to match schema
             });
+            if (data.profile_pic) {
+              setImageUrl(data.profile_pic);
+            }
           }
         }
       } catch (error) {
@@ -62,15 +65,15 @@ const UserProfile = () => {
     if (!user) return;
     
     try {
-      // Update profile in database
       const { error } = await supabase
         .from('profiles')
         .upsert({
-          user_id: user.id,
+          id: user.id,  // Changed from user_id to id based on the schema
           full_name: profileData.fullName,
           phone: profileData.phone,
           address: profileData.address,
-          preferences: profileData.preferences,
+          prefrences: profileData.preferences,  // Changed from preferences to prefrences to match schema
+          profile_pic: imageUrl,
           updated_at: new Date()
         });
         
@@ -79,7 +82,6 @@ const UserProfile = () => {
       setMessage('Profile updated successfully!');
       setIsEditing(false);
       
-      // Clear message after 3 seconds
       setTimeout(() => {
         setMessage('');
       }, 3000);
@@ -97,6 +99,41 @@ const UserProfile = () => {
       console.error('Error signing out:', error);
     }
   };
+
+  // Handle image upload and update state
+  async function uploadImage(e) {
+    try {
+      if (!e.target.files || !e.target.files[0]) {
+        console.log('No file selected');
+        return;
+      }
+      const file = e.target.files[0];
+      const fileName = `${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage
+        .from('images')
+        .upload(fileName, file);
+
+      if (error) {
+        console.error('Error uploading image:', error);
+      } else {
+        const { data: publicUrlData } = supabase.storage
+          .from('images')
+          .getPublicUrl(fileName);
+
+        const publicUrl = publicUrlData.publicUrl;
+        console.log('Public URL:', publicUrl);
+        setImageUrl(publicUrl);
+        
+        // Update the image display immediately
+        const profileImage = document.getElementById('profileImage');
+        if (profileImage) {
+          profileImage.src = publicUrl;
+        }
+      }
+    } catch (error) {
+      console.error('Error in uploadImage function:', error);
+    }
+  }
 
   if (loading) {
     return (
@@ -138,7 +175,11 @@ const UserProfile = () => {
 
       <div className="profile-card">
         <div className="profile-avatar">
-          <i className="fas fa-user-circle"></i>
+          <img 
+            src={imageUrl || 'https://via.placeholder.com/120'} 
+            alt='Profile' 
+            id='profileImage'
+          />
         </div>
         
         <div className="profile-email">
@@ -146,7 +187,7 @@ const UserProfile = () => {
           <p>Member since {new Date(user.created_at || Date.now()).toLocaleDateString()}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="profile-form">
+        <form className="profile-form">
           <div className="form-group">
             <label htmlFor="fullName">Full Name</label>
             <input
@@ -157,6 +198,20 @@ const UserProfile = () => {
               onChange={handleChange}
               disabled={!isEditing}
               placeholder="Enter your full name"
+            />
+          </div>
+
+          {/* Profile Picture Upload */}
+          <div className="form-group">
+            <label htmlFor='profilePicInput'>Profile Picture</label>
+            <input
+              type='file'
+              id='profilePicInput'
+              name='profilePic'
+              accept='image/*'
+              disabled={!isEditing}
+              onChange={uploadImage}
+              className="file-input"
             />
           </div>
 
@@ -202,13 +257,16 @@ const UserProfile = () => {
           <div className="profile-actions">
             {isEditing ? (
               <>
-                <button type="submit" className="save-btn">
+                <button 
+                type="button" 
+                className="save-btn"
+                onClick={handleSubmit}>
                   <i className="fas fa-save"></i> Save Changes
                 </button>
                 <button 
                   type="button" 
                   className="cancel-btn"
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {setIsEditing(false)}}
                 >
                   <i className="fas fa-times"></i> Cancel
                 </button>
