@@ -3,7 +3,8 @@ name: Keep Supabase Alive
 on:
   schedule:
     - cron: '0 9 * * 1,4'  # Runs every Monday and Thursday at 9:00 AM UTC
-
+  workflow_dispatch:
+  
 jobs:
   ping-database:
     runs-on: ubuntu-latest
