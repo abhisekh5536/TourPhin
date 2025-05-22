@@ -3,8 +3,8 @@ name: Keep Supabase Alive
 on:
   schedule:
     - cron: '0 9 * * 1,4'  # Runs every Monday and Thursday at 9:00 AM UTC
-  workflow_dispatch:
-  
+  workflow_dispatch:       # Allows you to manually trigger it
+
 jobs:
   ping-database:
     runs-on: ubuntu-latest
@@ -32,16 +32,18 @@ jobs:
           );
 
           async function ping() {
-            const { data, error } = await supabase
-              .from('keep_alive')  // Make sure this table exists
-              .select('id')
-              .limit(1);
+            const rowId = 'b6e4b925-ab9e-42b1-9919-1dedd915d528';
+
+            const { error } = await supabase
+              .from('keep_alive')
+              .update({ last_ping: new Date().toISOString() })
+              .eq('id', rowId);
 
             if (error) {
               console.error('Ping failed:', error);
               process.exit(1);
             } else {
-              console.log('Ping successful:', data);
+              console.log('✅ Ping successful: last_ping updated.');
             }
           }
 
