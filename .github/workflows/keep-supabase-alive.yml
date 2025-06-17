@@ -33,20 +33,22 @@ jobs:
               
               const rowId = 'b6e4b925-ab9e-42b1-9919-1dedd915d528';
               const now = new Date();
-              const formattedDate = now.toLocaleDateString('en-GB', { // dd/mm/yy format
+              
+              // Use built-in timezone support for Indian Standard Time
+              const formattedDate = now.toLocaleDateString('en-GB', {
                 day: '2-digit',
                 month: '2-digit',
-                year: '2-digit'
+                year: '2-digit',
                 timeZone: 'Asia/Kolkata'
               });
-              const formattedTime = now.toLocaleTimeString('en-GB', { // H:M format
+              const formattedTime = now.toLocaleTimeString('en-GB', {
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: false
+                hour12: false,
                 timeZone: 'Asia/Kolkata'
               });
               
-              const description = `Successful ping at: ${formattedDate} and ${formattedTime}`;
+              const description = `Successful ping at: ${formattedDate} and ${formattedTime} IST`;
               
               const { data, error } = await supabase
                 .from('keep_alive')
