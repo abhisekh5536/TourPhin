@@ -1,51 +1,63 @@
 name: Keep Supabase Alive
-
 on:
   schedule:
-    - cron: '0 9 * * 1,4'  # Runs every Monday and Thursday at 9:00 AM UTC
-  workflow_dispatch:       # Allows you to manually trigger it
+    - cron: '0 9 * * 1,4'  # Fixed: Runs every Monday and Thursday at 9:00 AM UTC
+  workflow_dispatch:       # Allows manual triggering
 
 jobs:
   ping-database:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4  # Updated to v4
         with:
           node-version: '18'
-
-      - name: Install Supabase client
+          
+      - name: Install dependencies
         run: npm install @supabase/supabase-js
-
+        
+      - name: Create ping script
+        run: |
+          cat << 'EOF' > ping-supabase.js
+          const { createClient } = require('@supabase/supabase-js');
+          
+          async function pingSupabase() {
+            try {
+              const supabase = createClient(
+                process.env.SUPABASE_URL,
+                process.env.SUPABASE_KEY
+              );
+              
+              const rowId = 'b6e4b925-ab9e-42b1-9919-1dedd915d528';
+              const { data, error } = await supabase
+                .from('keep_alive')
+                .update({ last_ping: new Date().toISOString() })
+                .eq('id', rowId)
+                .select();
+              
+              if (error) {
+                console.error('❌ Ping failed:', error.message);
+                process.exit(1);
+              }
+              
+              console.log('✅ Ping successful!');
+              console.log('Updated at:', new Date().toISOString());
+              console.log('Affected rows:', data?.length || 0);
+              
+            } catch (err) {
+              console.error('❌ Unexpected error:', err.message);
+              process.exit(1);
+            }
+          }
+          
+          pingSupabase();
+          EOF
+          
       - name: Ping Supabase Database
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        run: |
-          node <<EOF
-          const { createClient } = require('@supabase/supabase-js');
-
-          const supabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_KEY
-          );
-
-          async function ping() {
-            const rowId = 'b6e4b925-ab9e-42b1-9919-1dedd915d528';
-
-            const { error } = await supabase
-              .from('keep_alive')
-              .update({ last_ping: new Date().toISOString() })
-              .eq('id', rowId);
-
-            if (error) {
-              console.error('Ping failed:', error);
-              process.exit(1);
-            } else {
-              console.log('✅ Ping successful: last_ping updated.');
-            }
-          }
-
-          ping();
-          EOF
+        run: node ping-supabase.js
