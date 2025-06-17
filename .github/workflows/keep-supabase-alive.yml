@@ -32,9 +32,26 @@ jobs:
               );
               
               const rowId = 'b6e4b925-ab9e-42b1-9919-1dedd915d528';
+              const now = new Date();
+              const formattedDate = now.toLocaleDateString('en-GB', { // dd/mm/yy format
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit'
+              });
+              const formattedTime = now.toLocaleTimeString('en-GB', { // H:M format
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              });
+              
+              const description = `Successful ping at: ${formattedDate} and ${formattedTime}`;
+              
               const { data, error } = await supabase
                 .from('keep_alive')
-                .update({ last_ping: new Date().toISOString() })
+                .update({ 
+                  last_ping: now.toISOString(),
+                  discription: description
+                })
                 .eq('id', rowId)
                 .select();
               
