@@ -1,0 +1,84 @@
+name: Keep Supabase Alive
+on:
+  schedule:
+    - cron: '0 9 * * 1,4'  # Fixed: Runs every Monday and Thursday at 9:00 AM UTC
+  workflow_dispatch:       # Allows manual triggering
+
+jobs:
+  ping-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v4  # Updated to v4
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install @supabase/supabase-js
+        
+      - name: Create ping script
+        run: |
+          cat << 'EOF' > ping-supabase.js
+          const { createClient } = require('@supabase/supabase-js');
+          
+          async function pingSupabase() {
+            try {
+              const supabase = createClient(
+                process.env.SUPABASE_URL,
+                process.env.SUPABASE_KEY
+              );
+              
+              const rowId = 'b6e4b925-ab9e-42b1-9919-1dedd915d528';
+              const now = new Date();
+              
+              // Use built-in timezone support for Indian Standard Time
+              const formattedDate = now.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit',
+                timeZone: 'Asia/Kolkata'
+              });
+              const formattedTime = now.toLocaleTimeString('en-GB', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: 'Asia/Kolkata'
+              });
+              
+              const description = `Successful ping at: ${formattedDate} and ${formattedTime} IST`;
+              
+              const { data, error } = await supabase
+                .from('keep_alive')
+                .update({ 
+                  last_ping: now.toISOString(),
+                  discription: description
+                })
+                .eq('id', rowId)
+                .select();
+              
+              if (error) {
+                console.error('❌ Ping failed:', error.message);
+                process.exit(1);
+              }
+              
+              console.log('✅ Ping successful!');
+              console.log('Updated at:', new Date().toISOString());
+              console.log('Affected rows:', data?.length || 0);
+              
+            } catch (err) {
+              console.error('❌ Unexpected error:', err.message);
+              process.exit(1);
+            }
+          }
+          
+          pingSupabase();
+          EOF
+          
+      - name: Ping Supabase Database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: node ping-supabase.js
