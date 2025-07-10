@@ -103,6 +103,7 @@
   padding: 30px 50px;
   gap: 30px;
   position: relative;
+  justify-content: center;
 }
 
 /* Filter Sidebar */
@@ -348,7 +349,9 @@
 
 .packages-container {
   max-width: 1200px;
-  margin: 0 auto;
+
+  /* margin: 0 auto; */
+  flex-grow: 1;
 }
 
 .section-header {
@@ -389,6 +392,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .package-card:hover {

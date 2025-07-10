@@ -10,11 +10,12 @@ const UserProfile = () => {
     fullName: '',
     phone: '', 
     address: '',
-    preferences: ''
+    preferences: '',
+    role:''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
-  const [imageUrl, setImageUrl] = useState(''); // State for profile image URL
+  const [imageUrl, setImageUrl] = useState(''); 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -26,7 +27,7 @@ const UserProfile = () => {
           const { data, error } = await supabase
             .from('profiles')
             .select('*')
-            .eq('id', user.id)  // Changed from user_id to id based on the schema
+            .eq('id', user.id)  
             .single();
             
           if (data && !error) {
@@ -34,7 +35,9 @@ const UserProfile = () => {
               fullName: data.full_name || '',
               phone: data.phone || '',
               address: data.address || '',
-              preferences: data.preferences || ''  // Changed from preferences to prefrences to match schema
+              preferences: data.preferences || '' ,
+              role: data.role || ''
+
             });
             if (data.profile_pic) {
               setImageUrl(data.profile_pic);
@@ -68,11 +71,11 @@ const UserProfile = () => {
       const { error } = await supabase
         .from('profiles')
         .upsert({
-          id: user.id,  // Changed from user_id to id based on the schema
+          id: user.id,  
           full_name: profileData.fullName,
           phone: profileData.phone,
           address: profileData.address,
-          prefrences: profileData.preferences,  // Changed from preferences to prefrences to match schema
+          prefrences: profileData.preferences, 
           profile_pic: imageUrl,
           updated_at: new Date()
         });
@@ -180,6 +183,10 @@ const UserProfile = () => {
             alt='Profile' 
             id='profileImage'
           />
+          <div className='indicator'>
+            {/* to make first uppercase */}
+            {profileData.role.charAt(0).toUpperCase() + profileData.role.slice(1)}
+          </div>
         </div>
         
         <div className="profile-email">

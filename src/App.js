@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import './index.css';
 import TouristGuideForm from './components/Home/TouristGuideForm';
-import Destinations from './components/Destinations/Destinations';
+// import Destinations from './components/Destinations/Destinations';
 import AiHelp from './components/Ai Help/AiHelp';
 import Packages from './components/Packages/Packages';
-import PackageDetails from './components/Packages/PackageDetails';
+import PackageDetails from './components/PackageDetails/PackageDetails';
 import Footer from './components/Footer/Footer';
 import AboutUs from './components/About us/AboutUs';
 import ContactUs from './components/Contact Us/ContactUs';
@@ -18,6 +18,7 @@ import UserProfile from './components/Profile/UserProfile';
 import Guides from './components/Guides/Guides';
 import ProtectedRoute from './components/Proctectd/ProtectedRoute';
 import supabase from './helper/supabaseClient';
+import Destinations_copy from './components/Destinations/Destinations_copy';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -128,11 +129,12 @@ function App() {
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
-          <Route path="/destinations" element={<Destinations />} />
+          <Route path="/destinations" element={<Destinations_copy />} />
           <Route path="/aihelp" element={<AiHelp />} />
           <Route path="/packages" element={<Packages />} />
           <Route path="/packages/:id" element={<PackageDetails />} />
-          <Route path="/ai-help" element={<AiHelp />} />
+          {/* <Route path="/ai-help" element={<AiHelp />} /> */}
+          <Route path="/aihelp" element={<div>AI Help is temporarily disabled for testing</div>} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs handleTouristGuideClick={handleTouristGuideClick} />} />
           <Route path="/profile" element={<UserProfile />} />

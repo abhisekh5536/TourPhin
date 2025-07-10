@@ -111,7 +111,7 @@ const ContactUs = ({ handleTouristGuideClick }) => {
                   <p>Thank you for your message! We'll get back to you soon.</p>
                 </div>
               )}
-              <form onSubmit={handleSubmit} className="contact-form">
+              <form action="https://formsubmit.co/abhisekhy5536@gmail.co0m" method="POST" className="contact-form">
                 <div className="form-group">
                   <input 
                     type="text" 

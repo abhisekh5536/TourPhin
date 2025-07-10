@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Packages.css';
-import PackageDetails from './PackageDetails';
-// Change the incorrect import
-// FROM: import { destinations } from './Destinations';
-// TO: import { destinations } from '../Destinations/Destinations';
-
-import { destinations } from '../Destinations/Destinations';
+import PackageDetails from '../PackageDetails/PackageDetails';
 import { Link } from 'react-router-dom';
+import supabase from '../../helper/supabaseClient';
+import PackageCardSkeleton from './PackageCardSkeleton';
 
 const combinePackagesAndDestinations = (packages, destinations) => {
   const destinationCards = destinations.map(dest => ({
-    id: `dest_${dest.id}`,
+    id: `dest_${dest.sr_no}`,
     name: dest.name,
     duration: 'Flexible',
     price: `From ₹${dest.avgPrice} per person`,
     destinations: [dest.region],
-    highlights: dest.description.split('. ').filter(item => item.length > 0),
+    highlights: dest.description ? dest.description.split('. ').filter(item => item.length > 0) : [],
     bestSeason: dest.bestSeason,
-    type: dest.interests.join(' & '),
+    type: Array.isArray(dest.interests) ? dest.interests.join(' & ') : '',
     image: dest.image,
     isDestination: true,
     originalData: dest
@@ -26,12 +23,41 @@ const combinePackagesAndDestinations = (packages, destinations) => {
 };
 
 const Packages = ({ setCurrentPage }) => {
+  // Declare state variables first
+  const [destinations, setDestinations] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const packages = [
-   
-  ];
+  const packages = [];
+  const [loading, setLoading] = useState(true); 
+  
+  // Fetch destinations from supabase
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        
+        const { data, error } = await supabase
+          .from('destinations')
+          .select('*');
+        if (error) {
+          console.error('Error fetching destinations:', error.message);
+          setDestinations([]);
+        } else {
+          setDestinations(data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching destinations in Packages tab:',error);
+        setDestinations([]);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
+    };
+    fetchDestinations();
+  }, []);
 
-  const allItems = combinePackagesAndDestinations(packages, destinations);
+  // Use either fetched destinations or static destinations
+  const destinationsToUse = destinations.length > 0 ? destinations : destinations;
+  const allItems = combinePackagesAndDestinations(packages, destinationsToUse);
 
   return (
     <div className="packages-page">
@@ -52,7 +78,15 @@ const Packages = ({ setCurrentPage }) => {
           </div>
 
           <div className="packages-grid">
-            {allItems.map(pkg => (
+            {loading ? (
+              Array.from({ length: 6}).map((_,index) => (
+                <div key={index} className="package-card">
+                <PackageCardSkeleton />
+                </div>
+              ))
+            ) : (
+            allItems.map(pkg => (
+
               <div key={pkg.id} className="package-card">
                 <div className="package-image">
                   <img src={pkg.image} alt={pkg.name} />
@@ -88,32 +122,9 @@ const Packages = ({ setCurrentPage }) => {
                   
                 </div>
               </div>
-            ))}
-            {destinations.map(dest => (
-              <div key={dest.id} className="package-card">
-                <div className="package-image">
-                  <img src={dest.image} alt={dest.name} />
-                  <div className="package-type">{dest.interests.join(' • ')}</div>
-                </div>
-                <div className="package-content">
-                  <h3>{dest.name}</h3>
-                  <div className="package-info">
-                    <p><i className="fas fa-map-marker-alt"></i> {dest.region}</p>
-                    <p><i className="fas fa-hiking"></i> Difficulty: {dest.difficulty}</p>
-                  </div>
-                  <div className="package-highlights">
-                    <p>{dest.description}</p>
-                  </div>
-                  <div className="package-footer">
-                    <div className="package-price">From ₹{dest.avgPrice}</div>
-                    <div className="package-season">
-                      <i className="fas fa-calendar-alt"></i> Best Time: {dest.bestSeason}
-                    </div>
-                  </div>
-                  <Link to={`/destinations/${dest.id}`} className="view-details-btn">View Details</Link>
-                </div>
-              </div>
-            ))}
+            
+            ))
+            )}
           </div>
         </div>
       </section>

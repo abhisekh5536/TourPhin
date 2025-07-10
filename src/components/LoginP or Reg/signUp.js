@@ -9,7 +9,8 @@ const SignUp = () => {
     const [formData, setFormData] = useState({
       email: '',
       password: '',
-      confirmPassword:''
+      confirmPassword:'',
+      role:'user'
     });
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
@@ -60,6 +61,20 @@ const SignUp = () => {
         console.error('Signup error:', err);
       }
     }
+    try {
+      // Insert user profile into the profiles table
+      const { error } =  supabase
+        .from('profiles')
+        .insert([
+          { 
+            full_name: formData.fullName,
+            role: formData.role
+          }
+        ]);
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Profile insert error:', err);
+    }
 
 
     return (
@@ -94,6 +109,16 @@ const SignUp = () => {
                   placeholder="Confirm Password" 
                   required
                 />
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="user">User</option>
+                  <option value="guide">Guide</option>
+                  <option value="admin">Admin</option>
+                </select>
                 <button type="submit" className="login-btn">
                     Sign Up <i className="fas fa-user-plus"></i>
                 </button>

@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import OpenAI from "openai";
 import './AiHelp.css';
-import { destinations } from '../Destinations/Destinations';  // Add this import
+// import { destinations } from '../Destinations/Destinations';  // Add this import
+import supabase from '../../helper/supabaseClient';
 
 const AiHelp = () => {
   const [prompt, setPrompt] = useState('');
@@ -9,6 +10,7 @@ const AiHelp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const responseRef = useRef(null);
+  const [destinations, setDestinations] = useState([]);
 
   // Remove the destinationsData array and use the imported one directly
   const client = new OpenAI({
@@ -24,6 +26,23 @@ const AiHelp = () => {
     );
     return destination?.image || 'https://st4.depositphotos.com/4640111/41072/i/1600/depositphotos_410721236-stock-photo-planning-vacation-travel-plan-trip.jpg';
   };
+
+  // fetch the destinations from the supabase database
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      const { data, error } = await supabase
+        .from('destinations')
+        .select('*');
+      if (error) {
+        console.error('Error fetching destinations:', error.message);
+        setDestinations([]);
+      } else {
+        setDestinations(data || []);
+      }
+
+    };
+    fetchDestinations();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

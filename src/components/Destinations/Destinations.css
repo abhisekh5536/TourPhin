@@ -99,6 +99,7 @@
   padding: 30px 50px;
   gap: 30px;
   position: relative;
+  justify-content: center;
 }
 
 /* Filter Sidebar */
@@ -444,6 +445,7 @@
   overflow: hidden;
   z-index: 1;
   margin-top: auto;
+  text-decoration: none;
 }
 
 .card-button::before {
