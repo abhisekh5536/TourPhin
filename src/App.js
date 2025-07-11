@@ -118,7 +118,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      {user && <Navbar handleTouristGuideClick={handleTouristGuideClick} />}
+      {!loading && <Navbar handleTouristGuideClick={handleTouristGuideClick} />}
 
       {/* Routes */}
       <Routes>

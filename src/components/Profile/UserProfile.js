@@ -166,9 +166,14 @@ const UserProfile = () => {
   return (
     <div className="profile-container">
       <div className="profile-header">
-        <h1>My Profile</h1>
+        <h1>My Profile</h1> 
         <div className="header-line"></div>
       </div>
+      {(profileData.role === 'guide' || profileData.role === 'admin') && (
+        <div className='dashboard-btn-container'>
+          <Link to="/dashboard" className='dashboard_button'>Dashboard</Link>
+        </div>
+      )}
 
       {message && (
         <div className={message.includes('Failed') ? "error-message" : "success-message"}>

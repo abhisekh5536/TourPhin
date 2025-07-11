@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import supabase from '../../helper/supabaseClient';
 
 const ProtectedRoute = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
+
+    const publicRoutes = ['/', '/home', 'about-us'];
 
     useEffect(() => {
+        // Skip auth check for public routes
+        if (publicRoutes.includes(location.pathname)) {
+            setIsAuthenticated(true);
+            setLoading(false);
+            return;
+        }
+
         const checkAuth = async () => {
             try {
                 const { data: { user } } = await supabase.auth.getUser();
@@ -19,7 +29,7 @@ const ProtectedRoute = () => {
             }
         };
         checkAuth();
-    }, []);
+    }, [location]);
 
     if (loading) {
         return (
@@ -41,9 +51,12 @@ const ProtectedRoute = () => {
             </div>
         );
     }
-    if(!isAuthenticated) {
+    
+    if(!isAuthenticated && !publicRoutes.includes(location.pathname)) {
         return <Navigate to="/login" replace />;
     }
+    
     return <Outlet/>;
 };
+
 export default ProtectedRoute;
