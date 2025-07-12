@@ -125,6 +125,8 @@ function App() {
         {/* Public routes */}
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
         <Route path="/signUp" element={!user ? <SignUp /> : <Navigate to="/" replace />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs handleTouristGuideClick={handleTouristGuideClick} />} />
         
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
@@ -135,8 +137,6 @@ function App() {
           <Route path="/packages/:id" element={<PackageDetails />} />
           {/* <Route path="/ai-help" element={<AiHelp />} /> */}
           <Route path="/aihelp" element={<div>AI Help is temporarily disabled for testing</div>} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/contact-us" element={<ContactUs handleTouristGuideClick={handleTouristGuideClick} />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/guides" element={<Guides handleTouristGuideClick={handleTouristGuideClick} />} />
         </Route>
@@ -152,7 +152,7 @@ function App() {
       {user && <ConditionalFooter />}
       {/* Bottom Navigation for Mobile */}
       {/* Only show bottom navigation if user is logged in and on mobile */}
-      {user && (
+      {!user && (
         <div className="test">
           <Link to="/"><i className="fas fa-home"></i><span>Home</span></Link>
           <Link to="/destinations"><i className="fas fa-map-marker-alt"></i><span>Destinations</span></Link>
