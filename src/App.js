@@ -152,7 +152,7 @@ function App() {
       {user && <ConditionalFooter />}
       {/* Bottom Navigation for Mobile */}
       {/* Only show bottom navigation if user is logged in and on mobile */}
-      {!user && (
+      {(
         <div className="test">
           <Link to="/"><i className="fas fa-home"></i><span>Home</span></Link>
           <Link to="/destinations"><i className="fas fa-map-marker-alt"></i><span>Destinations</span></Link>
