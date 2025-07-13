@@ -19,6 +19,7 @@ import Guides from './components/Guides/Guides';
 import ProtectedRoute from './components/Proctectd/ProtectedRoute';
 import supabase from './helper/supabaseClient';
 import Destinations_copy from './components/Destinations/Destinations_copy';
+import Dashboard from './components/Dashboard/dashboard'
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -139,6 +140,7 @@ function App() {
           <Route path="/aihelp" element={<div>AI Help is temporarily disabled for testing</div>} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/guides" element={<Guides handleTouristGuideClick={handleTouristGuideClick} />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
         
         {/* Catch all route - redirect to login if not logged in, or home if logged in */}

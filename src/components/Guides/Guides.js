@@ -18,7 +18,7 @@ const userIcon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5v
 
 const sampleGuides = [
   {
-    id: 1,
+    sno: 1,
     name: "Arjun Sharma",
     image: userIcon,
     specialization: "Adventure & Trekking",
@@ -40,7 +40,7 @@ const sampleGuides = [
     ]
   },
   {
-    id: 2,
+    sno: 2,
     name: "Priya Patel",
     image: userIcon,
     specialization: "Cultural & Historical",
@@ -68,7 +68,7 @@ const sampleGuides = [
     ]
   },
   {
-    id: 3,
+    sno: 3,
     name: "Vikram Singh",
     image: userIcon,
     specialization: "Food & Culinary",
@@ -96,7 +96,7 @@ const sampleGuides = [
     ]
   },
   {
-    id: 4,
+    sno: 4,
     name: "Meera Agarwal",
     image: userIcon,
     specialization: "Cultural & Heritage",
@@ -111,7 +111,7 @@ const sampleGuides = [
     reviews: []
   },
   {
-    id: 5,
+    sno: 5,
     name: "Rajesh Kumar",
     image: userIcon,
     specialization: "Wildlife & Nature",
@@ -133,7 +133,7 @@ const sampleGuides = [
     ]
   },
   {
-    id: 6,
+    sno: 6,
     name: "Elena Petrova",
     image: userIcon,
     specialization: "Winter Sports",
@@ -149,7 +149,7 @@ const sampleGuides = [
   },
   // Add 3 more guides following the same pattern
   {
-    id: 7,
+    sno: 7,
     name: "Liam O'Connor",
     image: userIcon,
     specialization: "Food & Culinary",
@@ -164,7 +164,7 @@ const sampleGuides = [
     reviews: []
   },
   {
-    id: 8,
+    sno: 8,
     name: "Aisha Khan",
     image: userIcon,
     specialization: "Desert Safaris",
@@ -186,7 +186,7 @@ const sampleGuides = [
     ]
   },
   {
-    id: 9,
+    sno: 9,
     name: "Kenji Tanaka",
     image: userIcon,
     specialization: "Historical Tours",
@@ -290,9 +290,9 @@ const Guides = ({ handleTouristGuideClick }) => {
 
   // Filter and sort guides
   const filteredGuides = guides.filter(guide => {
-    const matchesSearch = guide.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        guide.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        guide.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (guide.name && guide.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        (guide.specialization && guide.specialization.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        (guide.description && guide.description.toLowerCase().includes(searchQuery.toLowerCase()));
     
     const matchesSpecialization = selectedSpecialization === 'all' || 
                                 guide.specialization === selectedSpecialization;
@@ -415,9 +415,9 @@ const Guides = ({ handleTouristGuideClick }) => {
           <div className="guides-grid">
             {filteredGuides.map((guide) => (
               <div 
-                key={guide.id} 
-                className={`guide-card ${selectedGuide === guide.id ? 'expanded' : ''}`}
-                onClick={() => handleGuideClick(guide.id)}
+                key={guide.sno} 
+                className={`guide-card ${selectedGuide === guide.sno ? 'expanded' : ''}`}
+                onClick={() => handleGuideClick(guide.sno)}
               >
                 {/* Rest of the guide card JSX remains the same */}
                 <div className="guide-card-inner">
@@ -452,7 +452,7 @@ const Guides = ({ handleTouristGuideClick }) => {
                       <div className="guide-highlights">
                         <div className="highlight">
                           <i className="fas fa-language"></i>
-                          <span>{guide.languages.join(', ')}</span>
+                          <span>{Array.isArray(guide.languages) ? guide.languages.join(', ') : 'Not specified'}</span>
                         </div>
                         <div className="highlight">
                           <i className="fas fa-briefcase"></i>
@@ -477,7 +477,7 @@ const Guides = ({ handleTouristGuideClick }) => {
                     <div className="guide-details">
                       <div className="detail-item">
                         <i className="fas fa-map-marker-alt"></i>
-                        <span>Regions: {guide.regions.join(', ')}</span>
+                        <span>{Array.isArray(guide.regions) ? guide.regions.join(', ') : 'Not listed'}</span>
                       </div>
                       <div className="detail-item">
                         <i className="fas fa-users"></i>
@@ -485,7 +485,7 @@ const Guides = ({ handleTouristGuideClick }) => {
                       </div>
                       <div className="detail-item">
                         <i className="fas fa-certificate"></i>
-                        <span>Certifications: {guide.certifications.join(', ')}</span>
+                        <span>{Array.isArray(guide.certifications) ? guide.certifications.join(', ') : 'None'}</span>
                       </div>
                       <div className="detail-item">
                         <i className="fas fa-info-circle"></i>
@@ -493,16 +493,16 @@ const Guides = ({ handleTouristGuideClick }) => {
                       </div>
                     </div>
                     <div className="guide-actions">
-                      <button className="action-btn comments-btn" onClick={(e) => toggleComments(e, guide.id)}>
+                      <button className="action-btn comments-btn" onClick={(e) => toggleComments(e, guide.sno)}>
                         <i className="fas fa-comment"></i> 
-                        {showComments && selectedGuide === guide.id ? 'Hide Reviews' : 'Show Reviews'}
+                        {showComments && selectedGuide === guide.sno ? 'Hide Reviews' : 'Show Reviews'}
                       </button>
-                      <Link to={`/contact-us?guide=${guide.id}`} className="action-btn book-btn" onClick={(e) => e.stopPropagation()}>
+                      <Link to={`/contact-us?guide=${guide.sno}`} className="action-btn book-btn" onClick={(e) => e.stopPropagation()}>
                         <i className="fas fa-calendar-check"></i> Book This Guide
                       </Link>
                     </div>
                     
-                    {showComments && selectedGuide === guide.id && (
+                    {showComments && selectedGuide === guide.sno && (
                       <div className="guide-comments">
                         <h4>Traveler Reviews</h4>
                         {guide.reviews && guide.reviews.length > 0 ? (
