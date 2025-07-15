@@ -1017,3 +1017,12 @@
 .trip-detail i {
   color: #afa375;
 }
+
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  color: #b0b0b0;
+}

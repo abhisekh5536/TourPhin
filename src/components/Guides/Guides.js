@@ -262,7 +262,7 @@ const Guides = ({ handleTouristGuideClick }) => {
 
             // If we have data, use it
             if (data && data.length > 0) {
-              console.log('Using Supabase data:', data);
+              console.log('Data fetched Successfully:');
               setGuides(data);
               setLoading(false);
               return;
@@ -459,7 +459,7 @@ const Guides = ({ handleTouristGuideClick }) => {
                           <span>{guide.experience} years</span>
                         </div>
                       </div>
-                      <p className="guide-description">{guide.description.substring(0, 100)}...</p>
+                      <p className="guide-description">{guide.description.substring(0, 200)}...</p>
                     </div>
                   </div>
 

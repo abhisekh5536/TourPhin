@@ -1,14 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './PackageDetails.css';
+import supabase  from '../../helper/supabaseClient';
 
 
-import { destinations } from '../Destinations/Destinations';
+
 
 const PackageDetails = ({ package: propPackage, onClose: propOnClose }) => {
+  // state variables
+  const [destinations, setDestinations] = useState([]); //////////////// wwork here 
+  const [loadingDetails, setLoadingDetails] = useState(true);
 
 useEffect(() => {
   window.scrollTo(0, 0);
+
+  const fetchDestinations = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('destinations')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching destinations:', error);
+        return;
+      }
+
+      setDestinations(data);
+    } catch (error) {
+      console.error('Error fetching destinations:', error);
+    }
+  };
+
+  fetchDestinations();
 }, []);
   
   const { id } = useParams();
@@ -21,35 +44,45 @@ useEffect(() => {
     if (propPackage) {
       setPkg(propPackage);
       setIsModal(true);
+      setLoadingDetails(false);
       return;
     }
+
+    if (!id || destinations.length === 0) return;
     
     // Otherwise, try to find the package by ID from the URL
     if (id) {
       // Check if it's a destination (format: dest_1, dest_2, etc.)
       if (id.startsWith('dest_')) {
         const destId = parseInt(id.split('_')[1]);
-        const destination = destinations.find(d => d.id === destId);
+        const destination = destinations.find(d => d.sr_no === destId);
         
         if (destination) {
+          // turn the string into an array, trimming whitespace
+          const interestsArr = destination.interests
+            ? destination.interests.split(',').map(s => s.trim())
+            : [];
           // Convert destination to package format
           const packageData = {
             id: `dest_${destination.id}`,
+            sr_no: destination.sr_no,
             name: destination.name,
             duration: 'Flexible',
             price: `From ₹${destination.avgPrice} per person`,
             destinations: [destination.region],
             highlights: destination.description.split('. ').filter(item => item.length > 0),
-            bestSeason: destination.bestSeason,
-            type: destination.interests.join(' & '),
+            season: destination.season,
+            type: interestsArr.join(' & '),
             image: destination.image,
             isDestination: true,
             originalData: destination
           };
           setPkg(packageData);
           setIsModal(false);
+          setLoadingDetails(false);
         } else {
           // Destination not found, redirect to packages page
+          console.log('Package not found');
           navigate('/packages');
         }
       } else {
@@ -61,7 +94,7 @@ useEffect(() => {
       // No ID and no prop package, redirect to packages page
       navigate('/packages');
     }
-  }, [id, propPackage, navigate]);
+  }, [id, destinations, propPackage, navigate]);
   
   const handleClose = () => {
     if (isModal && propOnClose) {
@@ -98,6 +131,18 @@ useEffect(() => {
     // Add your form submission logic here
   };
 
+  if (loadingDetails) {
+  return (
+    <div className="package-details-overlay">
+      <div className="package-details-content">
+        <div className="spinner-container">
+          <i className="fas fa-spinner fa-spin fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  );
+}
+
   return (
     <div className="package-details-overlay">
       <div className="package-details-content">
@@ -127,7 +172,7 @@ useEffect(() => {
               </div>
               <div className="info-item">
                 <i className="fas fa-calendar-alt"></i>
-                <span>Best Time: {pkg.bestSeason || 'Year-round'}</span>
+                <span>Best Time: {pkg.season || 'Year-round'}</span>
               </div>
               <div className="info-item">
                 <i className="fas fa-rupee-sign"></i>
