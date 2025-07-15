@@ -1,33 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../../helper/supabaseClient';
 import './dashboard.css';
+import Spinner from './spinner';
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('notifications');
   const [message, setMessage] = useState('');
   const [showChat, setShowChat] = useState(false);
-  const [availability, setAvailability] = useState('available'); // shared state
+  const [availability, setAvailability] = useState('available');
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
-  // Fetch current availability from Supabase
   useEffect(() => {
     const fetchAvailability = async () => {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) {
-        alert('User not logged in');
-        return;
-      }
+      setIsLoading(true); // Start loading
+      try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError || !user) {
+          alert('User not logged in');
+          return;
+        }
 
-      const { data, error } = await supabase
-        .from('guides')
-        .select('is_available')
-        .eq('id', user.id)
-        .single();
+        const { data, error } = await supabase
+          .from('guides')
+          .select('is_available')
+          .eq('id', user.id)
+          .single();
 
-      if (error) {
-        console.error('Error fetching availability:', error);
-        alert('Error fetching availability');
-      } else {
-        setAvailability(data.is_available ? 'available' : 'not_available');
+        if (error) {
+          console.error('Error fetching availability:', error);
+          alert('Error fetching availability');
+        } else {
+          setAvailability(data.is_available ? 'available' : 'not_available');
+        }
+      } finally {
+        setIsLoading(false); // End loading
       }
     };
 
@@ -81,19 +87,20 @@ function Dashboard() {
     <div className="dashboard-wrapper">
       <div className="dashboard-header">
         <span><h1>Dashboard</h1></span> 
-        <span className='availability'>
-          Availability:
-          <span>
+        {isLoading && <span className='spinner-div'><Spinner /></span>}
+        {!isLoading && (
+          <span className='availability'>
+            Availability:
             <select
               name='availability'
-              value={availability} // bind dropdown to state
+              value={availability}
               onChange={handle_availability}
             >
               <option value='available'>Available</option>
               <option value='not_available'>Not Available</option>
             </select>
           </span>
-        </span>
+        )}
       </div>
 
       <div className="dashboard-content">

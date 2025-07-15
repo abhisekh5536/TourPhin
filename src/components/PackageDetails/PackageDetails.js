@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './PackageDetails.css';
-// Change the incorrect import
-// FROM: import { destinations } from './Destinations';
-// TO: import { destinations } from '../Destinations/Destinations';
+
 
 import { destinations } from '../Destinations/Destinations';
 

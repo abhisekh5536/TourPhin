@@ -423,7 +423,7 @@ const Guides = ({ handleTouristGuideClick }) => {
                 <div className="guide-card-inner">
                   <div className="guide-card-front">
                     <div className="guide-image">
-                      <img src={guide.image} alt={guide.name} />
+                      <img src={guide.image || userIcon} alt={guide.name} />
                       <div className="guide-badges">
                         {guide.verified && (
                           <span className="verified-badge">
