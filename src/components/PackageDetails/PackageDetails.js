@@ -17,7 +17,7 @@ const PackageDetails = ({ package: propPackage, onClose: propOnClose }) => {
 
 useEffect(() => {
   window.scrollTo(0, 0);
-
+// fetch guides 
   const fetchGuides = async () => {
     const { data, error } = await supabase
       .from('guides')
@@ -28,6 +28,7 @@ useEffect(() => {
     }
     const availableGuides = data.filter(guide => guide.is_available);
 setGuides(availableGuides); // set all available guides for now
+
 
     
   }
@@ -143,11 +144,12 @@ setGuides(availableGuides); // set all available guides for now
     guide.regions &&
     guide.regions.some(region => region.toLowerCase().includes(pkg.name.toLowerCase())
   )); 
+  setFilteredGuides(filtered);
+  // console.log('filteredGuides',filteredGuides);  
 
   const packageID = pkg.package_id;
   console.log('packageID',packageID);
   setPackageID(packageID);
-  setFilteredGuides(filtered);
 },[pkg])
 
   // for default guide ID when user select no one 
@@ -182,7 +184,7 @@ useEffect(() => {
   const [formData, setFormData] = useState({
     user_id:'',
     package_id:'',
-    guide_id:filteredGuides.length > 0 ? filteredGuides[0].id : '',
+    guide_id:'',
     start_date: '',
     end_date:'',
     status:'pending',
