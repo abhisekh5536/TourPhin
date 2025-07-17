@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';  // Fix this import statement
 import OpenAI from "openai";
 import './AiHelp.css';
 // import { destinations } from '../Destinations/Destinations';  // Add this import
@@ -74,6 +75,7 @@ const AiHelp = () => {
             "description": "Brief description of why this destination matches the query",
             "highlights": ["Key Point 1", "Key Point 2", "Key Point 3"],
             "recommendation": "A personalized recommendation for this destination"
+            "sr_no": "exact the sr_no(serial number) of that destination form the data provided"
           }
         ],
         "summary": "A brief summary of the recommendations"
@@ -81,7 +83,7 @@ const AiHelp = () => {
         2) Always make the summary in the desired language as the user prompt (always match the language of user).
         3) Give summaries like a close friend would say in a friendly manner.
         4) if the budget is low give user recommandation to raise the budget and tell them the minimum destination price is 12000 and show him the single destination with least price.
-        5) if the budget is high give user recommandation to reduce the budget and tell him the maximum destination price is 12000 and show him the single destination with highest price.
+        5) if the budget is high give user recommandation to reduce the budget and tell them the maximum destination price is 40000 and show him the single destination with highest price.
       }
       
       Return multiple destination cards that match the criteria, not just one.
@@ -242,9 +244,7 @@ const AiHelp = () => {
                           </div>
                         )}
                         
-                        <button className="card-button">
-                          <i className="fas fa-info-circle"></i> View Details
-                        </button>
+                        <Link to={`/packages/dest_${destination.sr_no}`} className="view-details-btn">View Details</Link>
                       </div>
                     </div>
                   );
