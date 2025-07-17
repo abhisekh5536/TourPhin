@@ -234,35 +234,18 @@ const Guides = ({ handleTouristGuideClick }) => {
   useEffect(() => {
     const fetchGuides = async () => {
       try {
-        // Set a timeout to ensure we don't wait too long for Supabase
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Supabase connection timeout')), 5000)
-        );
-        
-        // Try to fetch from Supabase if it's available
+
         if (supabase) {
           try {
-            let query = supabase.from('guides').select('*');
-            
-            // Add filter parameters to the supabase query
-            if (searchQuery) {
-              query = query.ilike('name', `%${searchQuery}%`);
-            }
-            if (selectedSpecialization !== 'all') {
-              query = query.eq('specialization', selectedSpecialization);
-            }
-            
-            // Race between timeout and actual fetch
-            const { data, error } = await Promise.race([
-              query,
-              timeoutPromise
-            ]);
+            const {data, error} = await supabase
+            .from('guides')
+            .select('*');
 
             if (error) throw error;
 
             // If we have data, use it
-            if (data && data.length > 0) {
-              console.log('Data fetched Successfully:');
+            if (data) {
+              console.log('Data fetched Successfully:',data);
               setGuides(data);
               setLoading(false);
               return;

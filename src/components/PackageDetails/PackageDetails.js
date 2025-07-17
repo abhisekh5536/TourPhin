@@ -10,14 +10,32 @@ const PackageDetails = ({ package: propPackage, onClose: propOnClose }) => {
   // state variables
   const [destinations, setDestinations] = useState([]); //////////////// wwork here 
   const [loadingDetails, setLoadingDetails] = useState(true);
+  const [guides, setGuides] = useState([]);
+  const [filteredGuides, setFilteredGuides] = useState([]);
+  const [userID, setUserID] = useState('');
+  const [packageID, setPackageID] = useState('');
 
 useEffect(() => {
   window.scrollTo(0, 0);
 
+  const fetchGuides = async () => {
+    const { data, error } = await supabase
+      .from('guides')
+      .select('*');
+    if (error) {
+      console.error('Error fetching Guides:', error);
+      return;
+    }
+    const availableGuides = data.filter(guide => guide.is_available);
+setGuides(availableGuides); // set all available guides for now
+
+    
+  }
+
   const fetchDestinations = async () => {
     try {
       const { data, error } = await supabase
-        .from('destinations')
+        .from('packages')
         .select('*');
 
       if (error) {
@@ -31,13 +49,32 @@ useEffect(() => {
     }
   };
 
+  // fetch user id
+  async function fetchUserID() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    console.log('Error fetching user ID:', error);
+  } 
+  if (data?.user?.id) {
+    console.log('Fetched User ID:', data.user.id);
+    setUserID(data.user.id);
+
+  }
+} 
+
   fetchDestinations();
+  fetchGuides();
+  fetchUserID();
+
 }, []);
+
+
   
   const { id } = useParams();
   const navigate = useNavigate();
   const [pkg, setPkg] = useState(propPackage);
   const [isModal, setIsModal] = useState(!!propPackage);
+
   
   useEffect(() => {
     // If package is passed as prop, use it (modal mode)
@@ -64,11 +101,13 @@ useEffect(() => {
             : [];
           // Convert destination to package format
           const packageData = {
-            id: `dest_${destination.id}`,
+            id: `dest_${destination.package_id}`,
+            package_id: destination.package_id,
             sr_no: destination.sr_no,
             name: destination.name,
             duration: 'Flexible',
             price: `From ₹${destination.avgPrice} per person`,
+            totalPrice: destination.avgPrice,
             destinations: [destination.region],
             highlights: destination.description.split('. ').filter(item => item.length > 0),
             season: destination.season,
@@ -95,6 +134,40 @@ useEffect(() => {
       navigate('/packages');
     }
   }, [id, destinations, propPackage, navigate]);
+
+  useEffect(() => {
+  if(!pkg || !pkg.name || guides.length === 0 ) {
+    return;
+  }
+  const filtered  = guides.filter(guide => 
+    guide.regions &&
+    guide.regions.some(region => region.toLowerCase().includes(pkg.name.toLowerCase())
+  )); 
+
+  const packageID = pkg.package_id;
+  console.log('packageID',packageID);
+  setPackageID(packageID);
+  setFilteredGuides(filtered);
+},[pkg])
+
+  // for default guide ID when user select no one 
+  useEffect(() => {
+  if (filteredGuides.length > 0) {
+    setFormData(prev => ({
+      ...prev,
+      guide_id: filteredGuides[0].id
+    }));
+  }
+}, [guides]);
+
+// for updating the userID and packaheID to the form 
+useEffect(() => {
+  setFormData(prev => ({
+    ...prev,
+    user_id:userID,
+    package_id:packageID
+  }))
+},[userID,packageID])
   
   const handleClose = () => {
     if (isModal && propOnClose) {
@@ -107,12 +180,19 @@ useEffect(() => {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [formData, setFormData] = useState({
+    user_id:'',
+    package_id:'',
+    guide_id:filteredGuides.length > 0 ? filteredGuides[0].id : '',
+    start_date: '',
+    end_date:'',
+    status:'pending',
+    notes: '',
+    payment_status:'paid',
+    price:'',
     name: '',
     email: '',
     phone: '',
-    travelDate: '',
-    numberOfTravelers: 1,
-    specialRequirements: ''
+    numberOfTravelers: 1
   });
 
   const handleInputChange = (e) => {
@@ -123,12 +203,31 @@ useEffect(() => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // Update handleSubmit function
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically handle the form submission
-    console.log('Booking form submitted:', formData);
+    
+    const finalData = {
+      ...formData,
+      price: pkg.totalPrice * formData.numberOfTravelers  
+    };
+    
+    await submitBookingToSupabase(finalData);
+    console.log('Booking form submitted:', finalData);
     setShowBookingForm(false);
-    // Add your form submission logic here
+  };
+
+  const submitBookingToSupabase = async (bookingData) => {
+    const{ data, error } = await supabase.from('bookings').insert([bookingData]);
+
+    if (error) {
+      console.error('Error inserting booking:', error);
+      alert('Error booking package. Please try again.');
+    }
+    else {
+      console.log('successfully booked', data);
+      alert('Package booked successfully!');
+    }
   };
 
   if (loadingDetails) {
@@ -750,12 +849,23 @@ useEffect(() => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="travelDate">Preferred Travel Date</label>
+                  <label htmlFor="start_date">Start Date</label>
                   <input
                     type="date"
-                    id="travelDate"
-                    name="travelDate"
-                    value={formData.travelDate}
+                    id="start_date"
+                    name="start_date"
+                    value={formData.start_date}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="end_date">End Date</label>
+                  <input
+                    type="date"
+                    id="end_date"
+                    name="end_date"
+                    value={formData.end_date}
                     onChange={handleInputChange}
                     required
                   />
@@ -773,14 +883,36 @@ useEffect(() => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="specialRequirements">Special Requirements</label>
+                  <label htmlFor="notes">Special Requirements</label>
                   <textarea
-                    id="specialRequirements"
-                    name="specialRequirements"
-                    value={formData.specialRequirements}
+                    id="notes"
+                    name="notes"
+                    value={formData.notes}
                     onChange={handleInputChange}
                     rows="4"
                   ></textarea>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="guide">Select a Guide</label>
+                  <select
+                  id='guide_id'
+                  name='guide_id'
+                  value={formData.guide_id}
+                  onChange={handleInputChange}
+                  required>
+                    {filteredGuides.map((filteredGuide) => (
+                      <option key={filteredGuide.id} value={filteredGuide.id}>
+                        {filteredGuide.name} 
+                        ({filteredGuide.rating})
+                        </option>
+                    ))}
+                  </select>
+                  
+                </div>
+                <div className='form-group'>
+                    <label>Total Price</label>
+                    <h3 className='price'>₹{pkg.totalPrice * formData.numberOfTravelers}</h3>
+                    
                 </div>
                 <button type="submit" className="submit-booking-btn">
                   Confirm Booking

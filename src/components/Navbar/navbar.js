@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './navbar.css';
+
+
+
+
 // Remove TouristGuideButton import since we're not using it anymore
 
 function Navbar({handleTouristGuideClick}) {
@@ -36,6 +40,7 @@ function Navbar({handleTouristGuideClick}) {
           </Link>
           <div className="profile-icon">
             <Link to="/profile">
+            
               <i className="fas fa-user-circle"></i>
             </Link>
           </div>
