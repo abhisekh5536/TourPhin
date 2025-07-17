@@ -9,6 +9,7 @@ function Dashboard() {
   const [showChat, setShowChat] = useState(false);
   const [availability, setAvailability] = useState('available');
   const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     const fetchAvailability = async () => {
@@ -36,9 +37,27 @@ function Dashboard() {
         setIsLoading(false); // End loading
       }
     };
+    // fetch bookings
+    const fetchBookings = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('bookings')
+        .select('*')
+        .eq('guide_id', user.id)
+        .eq('status', 'pending');
+
+      if (!error) setBookings(data || []);
+    };
+
+
 
     fetchAvailability();
+    fetchBookings();
   }, []);
+
+
 
   // Handle dropdown change
   const handle_availability = async (event) => {
@@ -65,8 +84,24 @@ function Dashboard() {
     }
   };
 
-  const handleStatusUpdate = (id, action) => {
-    // Implement Supabase update logic here
+  const handleStatusUpdate = async (bookingId, action) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('bookings')
+      .update({ 
+        status: action === 'accept' ? 'confirmed' : 'rejected',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', bookingId)
+      .eq('guide_id', user.id);
+
+    if (!error) {
+      setBookings(prev => prev.filter(b => b.id !== bookingId));
+    } else {
+      alert('Status update failed');
+    }
   };
 
   const handleMessageClick = () => {
@@ -128,15 +163,29 @@ function Dashboard() {
 
           {activeTab === 'notifications' && (
             <div className="notifications-section">
-              <h2>New Booking Notifications</h2>
-              {notifications.map(notification => (
-                <div key={notification.id} className="notification-card">
-                  <h3>{notification.user}</h3>
-                  <p>Requested for: {notification.date}</p>
+              <h2>New Booking Requests</h2>
+              {bookings.map(booking => (
+                <div key={booking.id} className="notification-card">
+                  <h3>{booking.name}</h3>
+                  <p>📧 {booking.email}</p>
+                  <p>📱 {booking.phone}</p>
+                  <p>🗓️ {new Date(booking.start_date).toLocaleDateString()} - 
+                     {new Date(booking.end_date).toLocaleDateString()}</p>
+                  <p>👥 Travelers: {booking.numberOfTravelers}</p>
+                  {booking.notes && <p>📝 Notes: {booking.notes}</p>}
+                  <div className="status-badge status-{booking.status.toLowerCase()}">
+                    {booking.status}
+                  </div>
                   <div className="action-buttons">
-                    <button onClick={() => handleStatusUpdate(notification.id, 'accept')}>Accept</button>
-                    <button onClick={() => handleStatusUpdate(notification.id, 'reject')}>Reject</button>
-                    <button onClick={handleMessageClick}>Message</button>
+                    <button onClick={() => handleStatusUpdate(booking.id, 'accept')}>
+                      ✅ Accept
+                    </button>
+                    <button onClick={() => handleStatusUpdate(booking.id, 'reject')}>
+                      ❌ Reject
+                    </button>
+                    <button onClick={handleMessageClick}>
+                      💬 Message
+                    </button>
                   </div>
                 </div>
               ))}
