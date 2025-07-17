@@ -160,7 +160,7 @@ setGuides(availableGuides); // set all available guides for now
       guide_id: filteredGuides[0].id
     }));
   }
-}, [guides]);
+}, [filteredGuides]);
 
 // for updating the userID and packaheID to the form 
 useEffect(() => {
@@ -230,6 +230,7 @@ useEffect(() => {
       console.log('successfully booked', data);
       alert('Package booked successfully!');
     }
+    
   };
 
   if (loadingDetails) {
