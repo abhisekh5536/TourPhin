@@ -296,7 +296,7 @@ const UserProfile = () => {
         </form>
 
         <div className="profile-links">
-          <Link to="/packages" className="profile-link">
+          <Link to="/mybookings" className="profile-link">
             <i className="fas fa-suitcase"></i> My Bookings
           </Link>
           <Link to="/destinations" className="profile-link">

@@ -19,7 +19,8 @@ import Guides from './components/Guides/Guides';
 import ProtectedRoute from './components/Proctectd/ProtectedRoute';
 import supabase from './helper/supabaseClient';
 import Destinations_copy from './components/Destinations/Destinations_copy';
-import Dashboard from './components/Dashboard/dashboard'
+import Dashboard from './components/Dashboard/Guide Dashboard/dashboard';
+import MyBookings  from './components/My_bookings/mybookings';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -141,6 +142,7 @@ function App() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/guides" element={<Guides handleTouristGuideClick={handleTouristGuideClick} />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/mybookings" element={<MyBookings />} />
         </Route>
         
         {/* Catch all route - redirect to login if not logged in, or home if logged in */}

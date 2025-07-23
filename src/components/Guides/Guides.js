@@ -406,7 +406,11 @@ const Guides = ({ handleTouristGuideClick }) => {
                 <div className="guide-card-inner">
                   <div className="guide-card-front">
                     <div className="guide-image">
-                      <img src={guide.image || userIcon} alt={guide.name} />
+                      <img 
+                        src={guide.image || userIcon} 
+                        alt={guide.name} 
+                        className={!guide.is_available ? 'unavailable-img' : ''}
+                      />
                       <div className="guide-badges">
                         {guide.verified && (
                           <span className="verified-badge">
@@ -416,6 +420,12 @@ const Guides = ({ handleTouristGuideClick }) => {
                         {guide.featured && (
                           <span className="featured-badge">
                             <i className="fas fa-award"></i> Featured
+                          </span>
+                        )}
+                        {guide.is_available !== undefined && (
+                          <span className={`availability-badge ${guide.is_available ? 'available' : 'unavailable'}`}>
+                            <i className={`fas ${guide.is_available ? 'fa-check' : 'fa-times'}`}></i>
+                            {guide.is_available ? 'Available' : 'Unavailable'}
                           </span>
                         )}
                       </div>

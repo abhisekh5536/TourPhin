@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import supabase from '../../helper/supabaseClient';
+import supabase from '../../../helper/supabaseClient';
 import './dashboard.css';
-import Spinner from './spinner';
+import Spinner from '../../../spinner/spinner';
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('notifications');

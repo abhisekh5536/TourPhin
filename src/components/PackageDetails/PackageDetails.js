@@ -15,60 +15,51 @@ const PackageDetails = ({ package: propPackage, onClose: propOnClose }) => {
   const [userID, setUserID] = useState('');
   const [packageID, setPackageID] = useState('');
 
-useEffect(() => {
-  window.scrollTo(0, 0);
-// fetch guides 
-  const fetchGuides = async () => {
-    const { data, error } = await supabase
-      .from('guides')
-      .select('*');
-    if (error) {
-      console.error('Error fetching Guides:', error);
-      return;
-    }
-    const availableGuides = data.filter(guide => guide.is_available);
-setGuides(availableGuides); // set all available guides for now
+  useEffect(() => {
+    window.scrollTo(0, 0);
 
+    const fetchData = async () => {
+      try {
+        // Fetch user, packages, and guides in parallel
+        const [userResponse, packagesResponse, guidesResponse] = await Promise.all([
+          supabase.auth.getUser(),
+          supabase.from('packages').select('*'),
+          supabase.from('guides').select('*').eq('is_available', true)
+        ]);
 
-    
-  }
+        // Process user
+        if (userResponse.data?.user?.id) {
+          console.log('Fetched User ID:', userResponse.data.user.id);
+          setUserID(userResponse.data.user.id);
+        }
+        if(userResponse.error){
+          console.log('Error fetching user ID:', userResponse.error);
+        }
 
-  const fetchDestinations = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('packages')
-        .select('*');
+        // Process packages (destinations)
+        if (packagesResponse.error) {
+          console.error('Error fetching destinations:', packagesResponse.error);
+        } else {
+          setDestinations(packagesResponse.data || []);
+        }
 
-      if (error) {
-        console.error('Error fetching destinations:', error);
-        return;
+        // Process guides
+        if (guidesResponse.error) {
+          console.error('Error fetching Guides:', guidesResponse.error);
+        } else {
+          
+          setGuides(guidesResponse.data || []);
+        }
+
+      } catch (error) {
+        console.error('Error fetching initial data:', error);
+      } finally {
+        setLoadingDetails(false);
       }
+    };
 
-      setDestinations(data);
-    } catch (error) {
-      console.error('Error fetching destinations:', error);
-    }
-  };
-
-  // fetch user id
-  async function fetchUserID() {
-  const { data, error } = await supabase.auth.getUser();
-  if (error) {
-    console.log('Error fetching user ID:', error);
-  } 
-  if (data?.user?.id) {
-    console.log('Fetched User ID:', data.user.id);
-    setUserID(data.user.id);
-
-  }
-} 
-
-  fetchDestinations();
-  fetchGuides();
-  fetchUserID();
-
-}, []);
-
+    fetchData();
+  }, []);
 
   
   const { id } = useParams();
@@ -137,39 +128,38 @@ setGuides(availableGuides); // set all available guides for now
   }, [id, destinations, propPackage, navigate]);
 
   useEffect(() => {
-  if(!pkg || !pkg.name || guides.length === 0 ) {
-    return;
-  }
-  const filtered  = guides.filter(guide => 
-    guide.regions &&
-    guide.regions.some(region => region.toLowerCase().includes(pkg.name.toLowerCase())
-  )); 
-  setFilteredGuides(filtered);
-  // console.log('filteredGuides',filteredGuides);  
+    if(!pkg || !pkg.name || guides.length === 0 ) {
+      return;
+    }
+    const filtered = guides.filter(guide => 
+      guide.regions &&
+      guide.regions.some(region => region.toLowerCase().includes(pkg.name.toLowerCase()))
+    ); 
+    setFilteredGuides(filtered);
 
-  const packageID = pkg.package_id;
-  console.log('packageID',packageID);
-  setPackageID(packageID);
-},[pkg])
+    if (pkg.package_id) {
+      setPackageID(pkg.package_id);
+    }
+  }, [pkg, guides]);
 
   // for default guide ID when user select no one 
   useEffect(() => {
-  if (filteredGuides.length > 0) {
+    if (filteredGuides.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        guide_id: prev.guide_id || filteredGuides[0].id
+      }));
+    }
+  }, [filteredGuides]);
+
+  // for updating the userID and packageID to the form 
+  useEffect(() => {
     setFormData(prev => ({
       ...prev,
-      guide_id: filteredGuides[0].id
+      user_id: userID,
+      package_id: packageID
     }));
-  }
-}, [filteredGuides]);
-
-// for updating the userID and packaheID to the form 
-useEffect(() => {
-  setFormData(prev => ({
-    ...prev,
-    user_id:userID,
-    package_id:packageID
-  }))
-},[userID,packageID])
+  }, [userID, packageID]);
   
   const handleClose = () => {
     if (isModal && propOnClose) {
