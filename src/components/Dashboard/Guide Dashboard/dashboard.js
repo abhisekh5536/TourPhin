@@ -10,10 +10,16 @@ function Dashboard() {
   const [availability, setAvailability] = useState('available');
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [bookings, setBookings] = useState([]);
+  const [pkgDetails, setPkgDetails] = useState([]);
+
+  // Filter bookings based on status
+  const pendingBookings = bookings.filter(b => b.status === 'pending');
+  const upcomingBookings = bookings.filter(b => b.status === 'confirmed');
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchAvailability = async () => {
-      setIsLoading(true); // Start loading
+      // setIsLoading(true);
       try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError || !user) {
@@ -34,11 +40,12 @@ function Dashboard() {
           setAvailability(data.is_available ? 'available' : 'not_available');
         }
       } finally {
-        setIsLoading(false); // End loading
+        // setIsLoading(false); 
       }
     };
     // fetch bookings
     const fetchBookings = async () => {
+      // setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -46,18 +53,42 @@ function Dashboard() {
         .from('bookings')
         .select('*')
         .eq('guide_id', user.id)
-        .eq('status', 'pending');
+        .order('created_at', { ascending: false });
 
       if (!error) setBookings(data || []);
+      // setIsLoading(false);
     };
-
-
-
+    
+    
+    
+    
     fetchAvailability();
     fetchBookings();
+    setIsLoading(false);
   }, []);
 
 
+  // use effect for fetch booked package detail
+useEffect(()=> {
+  const fetchPkg = async() =>{
+    setIsLoading(true);
+    const pkgIds = bookings.map(b=>b.package_id); 
+    const {data , error }  = await supabase
+    .from('packages')
+    .select('*')
+    .in('package_id',pkgIds)
+
+    if(error) {
+      console.error('Error fetching package details',error);
+    }
+    else{
+      setPkgDetails(data);
+      console.log('package details fetched', data)
+    }
+    setIsLoading(false);
+  }
+  fetchPkg();
+},[bookings])
 
   // Handle dropdown change
   const handle_availability = async (event) => {
@@ -85,6 +116,9 @@ function Dashboard() {
   };
 
   const handleStatusUpdate = async (bookingId, action) => {
+    const confirmation = window.confirm(`Are you sure you want to ${action} this booking?`);
+    if (!confirmation) return;
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
@@ -94,13 +128,15 @@ function Dashboard() {
         status: action === 'accept' ? 'confirmed' : 'rejected',
         updated_at: new Date().toISOString()
       })
-      .eq('id', bookingId)
+      .eq('booking_id', bookingId)
       .eq('guide_id', user.id);
 
     if (!error) {
-      setBookings(prev => prev.filter(b => b.id !== bookingId));
+      setBookings(prev => prev.filter(b => b.booking_id !== bookingId));
+      alert(`Booking ${action === 'accept' ? 'accepted' : 'rejected'} successfully`);
     } else {
       alert('Status update failed');
+      console.log('Error updating status:', error);
     }
   };
 
@@ -113,10 +149,27 @@ function Dashboard() {
     { id: 2, user: 'Jane Smith', date: '2023-11-20', status: 'pending' }
   ];
 
-  const upcomingBookings = [
-    { id: 1, destination: 'Goa', date: '2023-12-10', status: 'confirmed' },
-    { id: 2, destination: 'Kerala', date: '2023-12-15', status: 'confirmed' }
-  ];
+  // Replace the mock data with actual upcoming bookings
+  const [upcomingConfirmed, setUpcomingConfirmed] = useState([]);
+  
+  // Add this useEffect to fetch confirmed bookings
+  useEffect(() => {
+    const fetchConfirmedBookings = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('bookings')
+        .select('*')
+        .eq('guide_id', user.id)
+        .eq('status', 'confirmed')
+        .gte('start_date', new Date().toISOString());
+      
+      setUpcomingConfirmed(data || []);
+    };
+    
+    fetchConfirmedBookings();
+  }, [bookings]); // Re-fetch when bookings change
 
   return (
     <div className="dashboard-wrapper">
@@ -164,23 +217,24 @@ function Dashboard() {
           {activeTab === 'notifications' && (
             <div className="notifications-section">
               <h2>New Booking Requests</h2>
-              {bookings.map(booking => (
-                <div key={booking.id} className="notification-card">
+              {pendingBookings.map(booking => (
+                <div key={booking.booking_id} className="notification-card">
                   <h3>{booking.name}</h3>
+                  <h4>{pkgDetails.find(pkg=>pkg.package_id === booking.package_id)?.name}</h4>
                   <p>📧 {booking.email}</p>
                   <p>📱 {booking.phone}</p>
                   <p>🗓️ {new Date(booking.start_date).toLocaleDateString()} - 
-                     {new Date(booking.end_date).toLocaleDateString()}</p>
+                    {new Date(booking.end_date).toLocaleDateString()}</p>
                   <p>👥 Travelers: {booking.numberOfTravelers}</p>
                   {booking.notes && <p>📝 Notes: {booking.notes}</p>}
                   <div className="status-badge status-{booking.status.toLowerCase()}">
                     {booking.status}
                   </div>
                   <div className="action-buttons">
-                    <button onClick={() => handleStatusUpdate(booking.id, 'accept')}>
+                    <button onClick={() => handleStatusUpdate(booking.booking_id, 'accept')}>
                       ✅ Accept
                     </button>
-                    <button onClick={() => handleStatusUpdate(booking.id, 'reject')}>
+                    <button onClick={() => handleStatusUpdate(booking.booking_id, 'reject')}>
                       ❌ Reject
                     </button>
                     <button onClick={handleMessageClick}>
@@ -196,10 +250,23 @@ function Dashboard() {
             <div className="upcoming-section">
               <h2>Upcoming Bookings</h2>
               {upcomingBookings.map(booking => (
-                <div key={booking.id} className="booking-card">
-                  <h3>{booking.destination}</h3>
-                  <p>Date: {booking.date}</p>
-                  <p>Status: {booking.status}</p>
+                <div key={booking.booking_id} className="notification-card">
+                  <h3>{booking.name}</h3>
+                  <h4>{pkgDetails.find(pkg=>pkg.package_id === booking.package_id)?.name}</h4>
+                  <p>📧 {booking.email}</p>
+                  <p>📱 {booking.phone}</p>
+                  <p>🗓️ {new Date(booking.start_date).toLocaleDateString()} - 
+                    {new Date(booking.end_date).toLocaleDateString()}</p>
+                  <p>👥 Travelers: {booking.numberOfTravelers}</p>
+                  {booking.notes && <p>📝 Notes: {booking.notes}</p>}
+                  <div className="status-badge status-confirmed">
+                    {booking.status}
+                  </div>
+                  <div className="action-buttons">
+                    <button onClick={handleMessageClick}>
+                      💬 Message
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -208,7 +275,26 @@ function Dashboard() {
           {activeTab === 'bookings' && (
             <div className="bookings-section">
               <h2>Booking Management</h2>
-              {/* Future UI */}
+              {bookings.map(booking => (
+                <div key={booking.booking_id} className="notification-card">
+                  <h3>{booking.name}</h3>
+                  <h4>{pkgDetails.find(pkg=>pkg.package_id === booking.package_id)?.name}</h4>
+                  <p>📧 {booking.email}</p>
+                  <p>📱 {booking.phone}</p>
+                  <p>🗓️ {new Date(booking.start_date).toLocaleDateString()} - 
+                    {new Date(booking.end_date).toLocaleDateString()}</p>
+                  <p>👥 Travelers: {booking.numberOfTravelers}</p>
+                  {booking.notes && <p>📝 Notes: {booking.notes}</p>}
+                  <div className={`status-badge status-${booking.status.toLowerCase()}`}>
+                    {booking.status}
+                  </div>
+                  <div className="action-buttons">
+                    <button onClick={handleMessageClick}>
+                      💬 Message
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
