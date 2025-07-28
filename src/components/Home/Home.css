@@ -67,6 +67,7 @@
   position: relative;
   z-index: 2;
   height: 100%;
+  width: 100%;
 }
 
 .exolore_swipe h1 {
@@ -505,4 +506,66 @@ section {
   display: block;
   font-size: 10px;
   margin-top: 2px;
+}
+
+.ai_help_card {
+  position: absolute;
+  background-color: rgba(30, 30, 36, 0.9);
+  border: 1px solid rgba(175, 163, 117, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 300px;
+  margin: 20px auto;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  right: 2%;
+  bottom: 0;
+}
+
+.ai_help_card h2 {
+  color: #ffd29c;
+  font-family: 'Poiret One', cursive;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+
+}
+
+.ai_help_card p {
+  color: #b0b0b0;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.ai_help_card a {
+  display: inline-block;
+  background-color: #afa375;
+  color: #121212;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.ai_help_card a:hover {
+  background-color: #ffd29c;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(175, 163, 117, 0.4);
+}   
+
+.ai_help_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(175, 163, 117, 0.5);
+}
+
+@media screen and (max-width: 992px) {
+  .ai_help_card {
+    display: none;
+  }
 }

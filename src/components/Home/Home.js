@@ -22,6 +22,14 @@ const Home = () => {
         <img src="/taaj.jpg" alt="Background" className="background" />
         <div className="exolore_swipe">
           <h1>EXPLORE MORE</h1>
+          <div>
+            {/* Ai help card */}
+            <div className="ai_help_card">
+              <h2>AI Help</h2>
+              <p>Get help from our AI assistant to plan your trip and find the best packages.</p>
+              <Link to="/aihelp">AI Help</Link>
+            </div>
+          </div>
           <h3 id="swipe_down" onClick={handleSwipeDownClick}>SWIPE DOWN <i className="fa-solid fa-chevron-down"></i></h3>
         </div>
       </div>
