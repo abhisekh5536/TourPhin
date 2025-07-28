@@ -88,7 +88,7 @@ const Packages = ({ setCurrentPage }) => {
             allItems.map(pkg => (
 
               <div key={pkg.id} className="package-card">
-                <div className="package-image">
+                <div className="package-img">
                   <img src={pkg.image} alt={pkg.name} />
                   <div className="package-type">{pkg.type}</div>
                 </div>
